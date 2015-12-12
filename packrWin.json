@@ -1,0 +1,17 @@
+{
+    "platform": "windows32",
+    "jdk": "openjdk-1.7.0-u80-unofficial-windows-i586-image.zip",
+    "executable": "myapp",
+    "classpath": [
+        "LD34/desktop/build/libs/desktop-1.0.jar"
+    ],
+    "mainclass": "fr.langladure.ld34.desktop.DesktopLauncher",
+    "vmargs": [
+       "-Xmx1G"
+    ],
+    "resources": [
+        "LD34/android/assets/"
+    ],
+    "minimizejre": "soft",
+    "outdir": "LD34/build/win32"
+}
