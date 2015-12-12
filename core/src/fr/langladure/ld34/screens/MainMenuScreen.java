@@ -1,14 +1,15 @@
 package fr.langladure.ld34.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import fr.langladure.ld34.GameBase;
 
 /**
@@ -18,8 +19,10 @@ public class MainMenuScreen extends AbstractScreen {
 
 	private Stage stage;
 	private Label title;
-	private Image credits;
+	private Label credits;
 	private Table table;
+
+	private int selected;
 
 
 	public MainMenuScreen(GameBase game) {
@@ -52,21 +55,8 @@ public class MainMenuScreen extends AbstractScreen {
 		// Create the screen background and adapt the world to it
 		Image screenBg = new Image(atlas.findRegion("mainMenuBg"));
 
-		float worldHeight = screenBg.getHeight();
-		float worldWidth = screenBg.getWidth();
-
-		viewport.setWorldSize(worldWidth, worldHeight);
-		updateViewPort(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-		// Make the background shorter dimension fill the screen while keeping its ratio
-		if (worldWidth / worldHeight < screenBg.getWidth() / screenBg.getHeight())
-			screenBg.setSize(worldHeight * screenBg.getWidth() / screenBg.getHeight(), worldHeight);
-		else
-			screenBg.setSize(worldWidth, worldWidth * screenBg.getHeight() / screenBg.getWidth());
-
-		// Center the background along the overflowing edge
-		screenBg.setX((camera.viewportWidth - screenBg.getWidth()) / 2f);
-		screenBg.setY((camera.viewportHeight - screenBg.getHeight()) / 2f);
+		float ratio = SCREEN_WIDTH / screenBg.getWidth();
+		screenBg.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		stage.addActor(screenBg);
 
@@ -78,8 +68,8 @@ public class MainMenuScreen extends AbstractScreen {
 		fontParams.minFilter = Texture.TextureFilter.Linear;
 		fontParams.magFilter = Texture.TextureFilter.Linear;
 		fontParams.shadowColor = new Color(0f, 0f, 0f, 0.3f);
-		fontParams.shadowOffsetX = 3;
-		fontParams.shadowOffsetY = 3;
+		fontParams.shadowOffsetX = 1;
+		fontParams.shadowOffsetY = 1;
 
 		Label.LabelStyle labelStyle = new Label.LabelStyle();
 		fontParams.size = (int) (0.15f * stage.getHeight());
@@ -87,12 +77,17 @@ public class MainMenuScreen extends AbstractScreen {
 		labelStyle.fontColor = Color.BLACK;
 		skin.add("title", labelStyle);
 
-		TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+		labelStyle = new Label.LabelStyle();
+		fontParams.size = (int) (0.15f * stage.getHeight());
+		labelStyle.font = GameBase.titleGen.generateFont(fontParams);
+		labelStyle.fontColor = Color.BLACK;
+		skin.add("credits", labelStyle);
+
+		labelStyle = new Label.LabelStyle();
 		fontParams.size = (int) (0.095f * stage.getHeight());
-		textButtonStyle.font = GameBase.titleGen.generateFont(fontParams);
-		textButtonStyle.overFontColor = Color.BLACK;
-		textButtonStyle.fontColor = new Color(0.14f, 0.14f, 0.18f, 1f);
-		skin.add("default", textButtonStyle);
+		labelStyle.font = GameBase.titleGen.generateFont(fontParams);
+		labelStyle.fontColor = new Color(0.14f, 0.14f, 0.18f, 1f);
+		skin.add("default", labelStyle);
 
 
 		title = new Label(GameBase.NAME, skin, "title");
@@ -101,7 +96,7 @@ public class MainMenuScreen extends AbstractScreen {
 		title.setY(0.87f * stage.getHeight() - 0.5f * title.getHeight());
 
 
-		credits = new Image(atlas.findRegion("credits"));
+		credits = new Label("Radnap #LD34", skin, "credits");
 		stage.addActor(credits);
 		float newHeight = 0.67f * stage.getHeight();
 		credits.setSize(newHeight * credits.getWidth() / credits.getHeight(), newHeight);
@@ -109,6 +104,7 @@ public class MainMenuScreen extends AbstractScreen {
 		credits.setY((0.8f * stage.getHeight() - credits.getHeight()) / 2f);
 
 
+		////////// MENU //////////
 		table = new Table(skin);
 		stage.addActor(table);
 		table.left().bottom();
@@ -117,36 +113,91 @@ public class MainMenuScreen extends AbstractScreen {
 		table.setX(0.15f * stage.getWidth());
 		table.setY(0.2f * stage.getHeight());
 
-		TextButton newGame = new TextButton("Nouvelle partie", skin);
-		newGame.addListener(new ChangeListener() {
+		Label newGame = new Label("Nouvelle partie", skin);
+		newGame.addListener(new InputListener() {
 			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				game.loadingScreen.setFadeWhenLoaded(false);
-				game.loadingScreen.setNextScreen(game.gameScreen);
-				game.setScreen(game.loadingScreen);
+			public boolean keyDown(InputEvent event, int keycode) {
+				if (keycode == Input.Keys.ENTER) {
+					game.loadingScreen.setFadeWhenLoaded(false);
+					game.loadingScreen.setNextScreen(game.gameScreen);
+					game.setScreen(game.loadingScreen);
+					return true;
+				}
+				return super.keyDown(event, keycode);
 			}
 		});
 		table.add(newGame).row();
 
-		TextButton options = new TextButton("Options", skin);
-		options.addListener(new ChangeListener() {
+		Label options = new Label("Options", skin);
+		options.addListener(new InputListener() {
 			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				game.setScreen(game.optionScreen);
+			public boolean keyDown(InputEvent event, int keycode) {
+				if (keycode == Input.Keys.ENTER) {
+					game.setScreen(game.optionScreen);
+					return true;
+				}
+				return super.keyDown(event, keycode);
 			}
 		});
 		table.add(options).row();
 		game.optionScreen.create();
 
-		TextButton exit = new TextButton("Quitter", skin);
-		exit.addListener(new ChangeListener() {
+		Label exit = new Label("Quitter", skin);
+		exit.addListener(new InputListener() {
 			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				Gdx.app.exit();
+			public boolean keyDown(InputEvent event, int keycode) {
+				if (keycode == Input.Keys.ENTER) {
+					Gdx.app.exit();
+					return true;
+				}
+				return super.keyDown(event, keycode);
 			}
 		});
 		table.add(exit).row();
+
+		table.layout();
+
+		// Cursor
+		selected = 0;
+		final Image cursor = new Image(game.assetManager.get("./cursor.png", Texture.class));
+		stage.addActor(cursor);
+		cursor.setSize(cursor.getWidth() * ratio, cursor.getHeight() * ratio);
+		cursor.setX(table.getX() - cursor.getWidth() - 2 * ratio);
+		Actor item = table.getChildren().items[selected];
+		item.setColor(Color.BLACK);
+		cursor.setY(table.getY() + item.getY() + (item.getHeight() - cursor.getHeight()) / 2);
+		stage.setKeyboardFocus(item);
+
+		stage.addListener(new InputListener() {
+			@Override
+			public boolean keyDown(InputEvent event, int keycode) {
+				if (keycode == Input.Keys.DOWN && selected < table.getChildren().size - 1) {
+					table.getChildren().items[selected].setColor(Color.WHITE);
+
+					selected++;
+					Actor item = table.getChildren().items[selected];
+					item.setColor(Color.BLACK);
+					cursor.setY(table.getY() + item.getY() + (item.getHeight() - cursor.getHeight()) / 2);
+					stage.setKeyboardFocus(item);
+
+					return true;
+				} else if (keycode == Input.Keys.UP && selected > 0) {
+					table.getChildren().items[selected].setColor(Color.WHITE);
+
+					selected--;
+					Actor item = table.getChildren().items[selected];
+					item.setColor(Color.BLACK);
+					cursor.setY(table.getY() + item.getY() + (item.getHeight() - cursor.getHeight()) / 2);
+					stage.setKeyboardFocus(item);
+
+					return true;
+				}
+
+				return super.keyDown(event, keycode);
+			}
+		});
 	}
+
 
 	@Override
 	public void resize(int width, int height) {

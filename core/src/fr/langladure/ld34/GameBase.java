@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import fr.langladure.ld34.screens.*;
 
 public class GameBase extends Game {
@@ -63,7 +64,7 @@ public class GameBase extends Game {
 
 		resolver = new InternalFileHandleResolver();
 		assetManager = new AssetManager(resolver);
-		assetManager.setLogger(new Logger("AssetManager", Application.LOG_DEBUG));
+		assetManager.setLogger(new Logger("AssetManager", Application.LOG_INFO));
 
 		assetsFinder = new AssetsFinder(assetManager, resolver);
 
@@ -72,17 +73,11 @@ public class GameBase extends Game {
 		assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
 		assetManager.setLoader(TiledMap.class, new TmxMapLoader(resolver));
 
-		if (!assetsFinder.load("freetype")) log("Directory fonts doesn't exist");
+		assetsFinder.load(".");
 		assetManager.finishLoading();
 
-		log(resolver.resolve("freetype/Oxygen.ttf").toString());
-		log(resolver.resolve("freetype/Oxygen.ttf").path());
-		log(resolver.resolve("freetype/Oxygen.ttf").exists()+"");
-		log(resolver.resolve("freetype").isDirectory()+"");
-		log(resolver.resolve("freetype/").isDirectory()+"");
-
-		smallDebugGen = assetManager.get("freetype/Oxygen.ttf", FreeTypeFontGenerator.class);
-		titleGen = assetManager.get("freetype/Radley.ttf", FreeTypeFontGenerator.class);
+		smallDebugGen = assetManager.get("./freetype/Oxygen.ttf", FreeTypeFontGenerator.class);
+		titleGen = assetManager.get("./freetype/Oxygen.ttf", FreeTypeFontGenerator.class);
 		title2Gen = titleGen;
 
 		mainMenuScreen = new MainMenuScreen(this);
@@ -90,7 +85,7 @@ public class GameBase extends Game {
 		loadingScreen = new LoadingScreen(this);
 		gameScreen = new GameScreen(this);
 
-		loadingScreen.setNextScreen(mainMenuScreen);
+		loadingScreen.setNextScreen(gameScreen);
 		setScreen(loadingScreen);
 	}
 

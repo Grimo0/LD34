@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import fr.langladure.ld34.GameBase;
 
 /**
@@ -24,14 +25,25 @@ public abstract class AbstractScreen implements Screen {
 	final public GameBase game;
 
 	public OrthographicCamera camera;
-	public FillViewport viewport;
+	public FitViewport viewport;
 
 
 	public AbstractScreen(final GameBase game) {
 		this.game = game;
 
+		SCREEN_WIDTH = 256f;
+		SCREEN_HEIGHT = 192f;
+
+		if (SCREEN_WIDTH / SCREEN_HEIGHT > (float) Gdx.graphics.getWidth() / Gdx.graphics.getHeight()) {
+			SCREEN_WIDTH = Gdx.graphics.getHeight();
+			SCREEN_HEIGHT = Gdx.graphics.getHeight() * SCREEN_WIDTH / SCREEN_HEIGHT;
+		} else {
+			SCREEN_HEIGHT = Gdx.graphics.getWidth() * SCREEN_HEIGHT / SCREEN_WIDTH;
+			SCREEN_WIDTH = Gdx.graphics.getWidth();
+		}
+
 		camera = new OrthographicCamera();
-		viewport = new FillViewport(0f, 0f, camera);
+		viewport = new FitViewport(SCREEN_WIDTH, SCREEN_HEIGHT, camera);
 		viewport.apply(true);
 	}
 
@@ -41,13 +53,15 @@ public abstract class AbstractScreen implements Screen {
 	 */
 	public void updateViewPort(int screenWidth, int screenHeight) {
 		viewport.update(screenWidth, screenHeight, true);
-		if (viewport.getWorldWidth() / viewport.getWorldHeight() > (float) screenWidth / screenHeight) {
+		/*if (viewport.getWorldWidth() / viewport.getWorldHeight() > (float) screenWidth / screenHeight) {
 			SCREEN_WIDTH = viewport.getWorldHeight() * screenWidth / screenHeight;
 			SCREEN_HEIGHT = viewport.getWorldHeight();
 		} else {
 			SCREEN_WIDTH = viewport.getWorldWidth();
 			SCREEN_HEIGHT = viewport.getWorldWidth() * screenHeight / screenWidth;
-		}
+		}*/
+		SCREEN_WIDTH = viewport.getWorldWidth();
+		SCREEN_HEIGHT = viewport.getWorldHeight();
 	}
 
 	public void loadAssets() {

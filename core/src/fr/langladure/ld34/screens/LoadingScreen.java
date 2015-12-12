@@ -51,21 +51,8 @@ public class LoadingScreen extends AbstractScreen {
 		/// Create the screen background and adapt the world to it
 		Image screenBg = new Image(atlas.findRegion("loadingBg"));
 
-		float worldHeight = screenBg.getHeight();
-		float worldWidth = screenBg.getWidth();
-
-		viewport.setWorldSize(worldWidth, worldHeight);
-		updateViewPort(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-		// Make the background shorter dimension fill the screen while keeping its ratio
-		if (worldWidth / worldHeight < screenBg.getWidth() / screenBg.getHeight())
-			screenBg.setSize(worldHeight * screenBg.getWidth() / screenBg.getHeight(), worldHeight);
-		else
-			screenBg.setSize(worldWidth, worldWidth * screenBg.getHeight() / screenBg.getWidth());
-
-		// Center the background along the overflowing edge
-		screenBg.setX((camera.viewportWidth - screenBg.getWidth()) / 2f);
-		screenBg.setY((camera.viewportHeight - screenBg.getHeight()) / 2f);
+		float ratio = SCREEN_WIDTH / screenBg.getWidth();
+		screenBg.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		stage.addActor(screenBg);
 
@@ -73,8 +60,7 @@ public class LoadingScreen extends AbstractScreen {
 		// Grab the regions from the atlas and create some images
 		logo = new Image(atlas.findRegion("logo"));
 		stage.addActor(logo);
-		float newHeight = stage.getHeight() * 0.4f;
-		logo.setSize(newHeight * logo.getWidth() / logo.getHeight(), newHeight);
+		logo.setSize(logo.getWidth() * ratio, logo.getHeight() * ratio);
 		logo.setX((stage.getWidth() - logo.getWidth()) / 2f);
 		logo.setY((stage.getHeight() - logo.getHeight()) * 3f / 4f);
 

@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import fr.langladure.ld34.GameBase;
 
 
@@ -15,6 +16,7 @@ public class GameScreen extends AbstractScreen {
 	private PooledEngine engine;
 
 	private Sprite background;
+	private Sprite plant;
 
 
 	public GameScreen(GameBase game) {
@@ -32,23 +34,23 @@ public class GameScreen extends AbstractScreen {
 
 	@Override
 	public void create() {
-//		TextureAtlas atlas = game.assetManager.get("game/gamePack.atlas", TextureAtlas.class);
+		TextureAtlas atlas = game.assetManager.get("game/gamePack.atlas", TextureAtlas.class);
 
 
-		float worldWidth = 1;
-		viewport.setWorldSize(worldWidth, worldWidth * Gdx.graphics.getHeight() / Gdx.graphics.getWidth());
-		updateViewPort(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//		float worldWidth = 1;
+//		viewport.setWorldSize(worldWidth, worldWidth * Gdx.graphics.getHeight() / Gdx.graphics.getWidth());
+//		updateViewPort(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 
 		///// Background /////
-		/*background = atlas.createSprite("bg");
-		background.setPosition(0f, 0f);
-		if (Gdx.graphics.getWidth() / background.getWidth() < Gdx.graphics.getHeight() / background.getHeight()) {
-			background.setSize(viewport.getWorldHeight() * background.getWidth() / background.getHeight(), viewport.getWorldHeight());
-		} else {
-			background.setSize(viewport.getWorldWidth(), viewport.getWorldWidth() * background.getHeight() / background.getWidth());
-		}*/
+		background = atlas.createSprite("bg");
 
+		float ratio = SCREEN_WIDTH / background.getWidth();
+		background.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+		plant = atlas.createSprite("plant1D");
+		plant.setSize(plant.getWidth() * ratio, plant.getHeight() * ratio);
+		plant.setPosition(4f * SCREEN_WIDTH / 5f - plant.getWidth() / 2f, (SCREEN_HEIGHT - plant.getHeight()) / 2f);
 	}
 
 	@Override
@@ -69,11 +71,11 @@ public class GameScreen extends AbstractScreen {
 
 		engine.update(delta);
 
-		/*game.batch.setProjectionMatrix(camera.combined);
+		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-		background.setPosition(camera.position.x - background.getWidth() / 2f, camera.position.y - background.getHeight() / 2f);
 		background.draw(game.batch);
-		game.batch.end();*/
+		plant.draw(game.batch);
+		game.batch.end();
 
 	}
 

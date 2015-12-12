@@ -48,8 +48,10 @@ public class AssetsFinder {
 		assets.add(new AssetDescriptor("music", null, Music.class));
 		assets.add(new AssetDescriptor("sound", null, Sound.class)); // You could remove all but this one (Why ?)
 		assets.add(new AssetDescriptor("skin", "skin.json", Skin.class));
-		assets.add(new AssetDescriptor("texture", null, Texture.class));
 		assets.add(new AssetDescriptor("atlas", ".atlas", TextureAtlas.class));
+//		assets.add(new AssetDescriptor("texture", null, Texture.class));
+		assets.add(new AssetDescriptor("texture", ".jpg", Texture.class));
+		assets.add(new AssetDescriptor("texture", ".png", Texture.class));
 		assets.add(new AssetDescriptor("fonts", null, BitmapFont.class));
 		assets.add(new AssetDescriptor("freetype", ".ttf", FreeTypeFontGenerator.class));
 		assets.add(new AssetDescriptor("effect", null, ParticleEffect.class));
