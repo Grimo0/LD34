@@ -19,7 +19,7 @@
     wrapX: ClampToEdge,
     wrapY: ClampToEdge,
     format: RGBA8888,
-    alias: true,
+    alias: false,
     outputFormat: png,
     jpegQuality: 1,//0.9
     ignoreBlankImages: true,

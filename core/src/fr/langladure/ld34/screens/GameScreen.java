@@ -2,10 +2,13 @@ package fr.langladure.ld34.screens;
 
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import fr.langladure.ld34.Calamity;
 import fr.langladure.ld34.GameBase;
+import fr.langladure.ld34.Plant;
 
 
 /**
@@ -16,7 +19,9 @@ public class GameScreen extends AbstractScreen {
 	private PooledEngine engine;
 
 	private Sprite background;
-	private Sprite plant;
+	private Sprite frame;
+	private Plant plant;
+	private Calamity calamity;
 
 
 	public GameScreen(GameBase game) {
@@ -37,20 +42,17 @@ public class GameScreen extends AbstractScreen {
 		TextureAtlas atlas = game.assetManager.get("game/gamePack.atlas", TextureAtlas.class);
 
 
-//		float worldWidth = 1;
-//		viewport.setWorldSize(worldWidth, worldWidth * Gdx.graphics.getHeight() / Gdx.graphics.getWidth());
-//		updateViewPort(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-
-		///// Background /////
 		background = atlas.createSprite("bg");
 
 		float ratio = SCREEN_WIDTH / background.getWidth();
 		background.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-		plant = atlas.createSprite("plant1D");
-		plant.setSize(plant.getWidth() * ratio, plant.getHeight() * ratio);
-		plant.setPosition(4f * SCREEN_WIDTH / 5f - plant.getWidth() / 2f, (SCREEN_HEIGHT - plant.getHeight()) / 2f);
+		frame = atlas.createSprite("bg_frame");
+		frame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+		plant = new Plant(atlas, ratio, SCREEN_WIDTH / 2f, 0.15f * SCREEN_HEIGHT);
+
+		calamity = new Calamity("rain", atlas, ratio, SCREEN_WIDTH, SCREEN_HEIGHT);
 	}
 
 	@Override
@@ -62,6 +64,7 @@ public class GameScreen extends AbstractScreen {
 	public void show() {
 		super.show();
 		InputMultiplexer multiplexer = new InputMultiplexer();
+		multiplexer.addProcessor(calamity);
 		Gdx.input.setInputProcessor(multiplexer);
 	}
 
@@ -71,12 +74,20 @@ public class GameScreen extends AbstractScreen {
 
 		engine.update(delta);
 
+		if (calamity.isFinished()) {
+			plant.nextStep();
+		}
+
+		plant.act(delta);
+		calamity.act(delta);
+
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
 		background.draw(game.batch);
+		calamity.draw(game.batch);
 		plant.draw(game.batch);
+		frame.draw(game.batch);
 		game.batch.end();
-
 	}
 
 	@Override

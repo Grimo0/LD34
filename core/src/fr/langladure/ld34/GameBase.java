@@ -49,7 +49,7 @@ public class GameBase extends Game {
 			FileHandle[] assetsFolder = Gdx.files.internal("../../_assets").list();
 			for (FileHandle folder : assetsFolder) {
 				if (folder.isDirectory() && !folder.name().startsWith("_")) {
-//					TexturePacker.process("../../_assets/" + folder.name(), folder.name(), folder.name() + "Pack");
+					TexturePacker.process("../../_assets/" + folder.name(), folder.name(), folder.name() + "Pack");
 				}
 			}
 		}
@@ -92,7 +92,9 @@ public class GameBase extends Game {
 	@Override
 	public void render() {
 		super.render();
-		if (!RELEASE && Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) && (Gdx.input.isKeyPressed(Input.Keys.Q) || Gdx.input.isKeyPressed(Input.Keys.W)))
+			Gdx.app.exit();
+		else if (!RELEASE && Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && Gdx.input.isKeyJustPressed(Input.Keys.D)) {
 			DEVMODE = !DEVMODE;
 		} else if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE) && screen != mainMenuScreen) {
 			loadingScreen.setFadeWhenLoaded(true);

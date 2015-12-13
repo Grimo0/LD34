@@ -65,9 +65,9 @@ public class MainMenuScreen extends AbstractScreen {
 		Skin skin = new Skin();
 
 		FreeTypeFontGenerator.FreeTypeFontParameter fontParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
-		fontParams.minFilter = Texture.TextureFilter.Linear;
-		fontParams.magFilter = Texture.TextureFilter.Linear;
-		fontParams.shadowColor = new Color(0f, 0f, 0f, 0.3f);
+//		fontParams.minFilter = Texture.TextureFilter.Linear;
+//		fontParams.magFilter = Texture.TextureFilter.Linear;
+		fontParams.shadowColor = new Color(29f/255f, 46f/255f, 66f/255f, 1f);
 		fontParams.shadowOffsetX = 1;
 		fontParams.shadowOffsetY = 1;
 
@@ -86,7 +86,7 @@ public class MainMenuScreen extends AbstractScreen {
 		labelStyle = new Label.LabelStyle();
 		fontParams.size = (int) (0.095f * stage.getHeight());
 		labelStyle.font = GameBase.titleGen.generateFont(fontParams);
-		labelStyle.fontColor = new Color(0.14f, 0.14f, 0.18f, 1f);
+		labelStyle.fontColor = new Color(63f/255f, 90f/255f, 135f/255f, 1f);
 		skin.add("default", labelStyle);
 
 
@@ -164,7 +164,7 @@ public class MainMenuScreen extends AbstractScreen {
 		cursor.setSize(cursor.getWidth() * ratio, cursor.getHeight() * ratio);
 		cursor.setX(table.getX() - cursor.getWidth() - 2 * ratio);
 		Actor item = table.getChildren().items[selected];
-		item.setColor(Color.BLACK);
+		item.setColor(1f, 1f, 1f, 0.8f);
 		cursor.setY(table.getY() + item.getY() + (item.getHeight() - cursor.getHeight()) / 2);
 		stage.setKeyboardFocus(item);
 
@@ -172,21 +172,21 @@ public class MainMenuScreen extends AbstractScreen {
 			@Override
 			public boolean keyDown(InputEvent event, int keycode) {
 				if (keycode == Input.Keys.DOWN && selected < table.getChildren().size - 1) {
-					table.getChildren().items[selected].setColor(Color.WHITE);
+					table.getChildren().items[selected].setColor(1f, 1f, 1f, 1f);
 
 					selected++;
 					Actor item = table.getChildren().items[selected];
-					item.setColor(Color.BLACK);
+					item.setColor(1f, 1f, 1f, 0.8f);
 					cursor.setY(table.getY() + item.getY() + (item.getHeight() - cursor.getHeight()) / 2);
 					stage.setKeyboardFocus(item);
 
 					return true;
 				} else if (keycode == Input.Keys.UP && selected > 0) {
-					table.getChildren().items[selected].setColor(Color.WHITE);
+					table.getChildren().items[selected].setColor(1f, 1f, 1f, 1f);
 
 					selected--;
 					Actor item = table.getChildren().items[selected];
-					item.setColor(Color.BLACK);
+					item.setColor(1f, 1f, 1f, 0.8f);
 					cursor.setY(table.getY() + item.getY() + (item.getHeight() - cursor.getHeight()) / 2);
 					stage.setKeyboardFocus(item);
 
