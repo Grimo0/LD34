@@ -1,0 +1,7 @@
+{
+  back_duration: 0.1,
+  combinations: [
+	{a:0, n:10},
+	{a:1, n:10}
+  ]
+}

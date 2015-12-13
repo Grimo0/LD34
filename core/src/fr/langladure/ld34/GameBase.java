@@ -27,7 +27,6 @@ public class GameBase extends Game {
 	public static Logger logger;
 
 	public static StringBuilder stringBuilder;
-	public static FreeTypeFontGenerator smallDebugGen;
 	public static FreeTypeFontGenerator title2Gen;
 	public static FreeTypeFontGenerator titleGen;
 
@@ -76,9 +75,8 @@ public class GameBase extends Game {
 		assetsFinder.load(".");
 		assetManager.finishLoading();
 
-		smallDebugGen = assetManager.get("./freetype/Oxygen.ttf", FreeTypeFontGenerator.class);
-		titleGen = assetManager.get("./freetype/Oxygen.ttf", FreeTypeFontGenerator.class);
-		title2Gen = titleGen;
+		titleGen = assetManager.get("./freetype/PressStart2P-Regular.ttf", FreeTypeFontGenerator.class);
+		title2Gen = assetManager.get("./freetype/VT323-Regular.ttf", FreeTypeFontGenerator.class);
 
 		mainMenuScreen = new MainMenuScreen(this);
 		optionScreen = new OptionScreen(this);

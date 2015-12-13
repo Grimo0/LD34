@@ -6,6 +6,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
+import fr.langladure.ld34.AnimatedElement;
 import fr.langladure.ld34.Calamity;
 import fr.langladure.ld34.GameBase;
 import fr.langladure.ld34.Plant;
@@ -16,12 +19,15 @@ import fr.langladure.ld34.Plant;
  */
 public class GameScreen extends AbstractScreen {
 
-	private PooledEngine engine;
-
 	private Sprite background;
+	private AnimatedElement clouds;
 	private Sprite frame;
+
 	private Plant plant;
+
+	private Array<Calamity> calamities;
 	private Calamity calamity;
+	private int calamityN;
 
 
 	public GameScreen(GameBase game) {
@@ -33,8 +39,6 @@ public class GameScreen extends AbstractScreen {
 	public void loadAssets() {
 		super.loadAssets();
 		game.assetsFinder.load("game");
-
-		engine = new PooledEngine();
 	}
 
 	@Override
@@ -47,12 +51,18 @@ public class GameScreen extends AbstractScreen {
 		float ratio = SCREEN_WIDTH / background.getWidth();
 		background.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+		clouds = new AnimatedElement(ratio, 1f, (TextureRegion[]) atlas.findRegions("clouds").toArray(TextureRegion.class), true);
+
 		frame = atlas.createSprite("bg_frame");
 		frame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		plant = new Plant(atlas, ratio, SCREEN_WIDTH / 2f, 0.15f * SCREEN_HEIGHT);
 
+		calamities = new Array<>();
 		calamity = new Calamity("rain", atlas, ratio, SCREEN_WIDTH, SCREEN_HEIGHT);
+		calamities.add(calamity);
+		calamities.add(new Calamity("fire", atlas, ratio, SCREEN_WIDTH, SCREEN_HEIGHT));
+		calamityN = 0;
 	}
 
 	@Override
@@ -63,27 +73,35 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void show() {
 		super.show();
-		InputMultiplexer multiplexer = new InputMultiplexer();
-		multiplexer.addProcessor(calamity);
-		Gdx.input.setInputProcessor(multiplexer);
+		Gdx.input.setInputProcessor(calamity);
 	}
 
 	@Override
 	public void render(float delta) {
 		super.render(delta);
 
-		engine.update(delta);
-
-		if (calamity.isFinished()) {
+		if (calamityN == plant.getCurrentStep() && calamity.isFinished()) {
 			plant.nextStep();
+		} else if (calamityN != -1 && calamity.isFinished() && plant.isAnimationFinished()) {
+			if (calamityN < calamities.size - 1) {
+				calamity = calamities.get(++calamityN);
+				Gdx.input.setInputProcessor(calamity);
+			} else {
+				calamityN = -1;
+				game.loadingScreen.setFadeWhenLoaded(true);
+				game.loadingScreen.setNextScreen(game.mainMenuScreen);
+				game.setScreen(game.loadingScreen);
+			}
 		}
 
-		plant.act(delta);
+		clouds.act(delta);
 		calamity.act(delta);
+		plant.act(delta);
 
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
 		background.draw(game.batch);
+		clouds.draw(game.batch);
 		calamity.draw(game.batch);
 		plant.draw(game.batch);
 		frame.draw(game.batch);

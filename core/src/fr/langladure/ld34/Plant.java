@@ -23,7 +23,7 @@ public class Plant {
 		step.setY(y);
 		steps.add(step);
 
-		step = new AnimatedElement(ratio, 0.0f, (TextureRegion[]) atlas.findRegions("plantStep1").toArray(TextureRegion.class), false);
+		step = new AnimatedElement(ratio, 0.4f, (TextureRegion[]) atlas.findRegions("plantStep2").toArray(TextureRegion.class), false);
 		step.setX(x - step.getWidth() / 2f);
 		step.setY(y);
 		steps.add(step);

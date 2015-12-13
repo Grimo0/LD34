@@ -67,25 +67,28 @@ public class MainMenuScreen extends AbstractScreen {
 		FreeTypeFontGenerator.FreeTypeFontParameter fontParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
 //		fontParams.minFilter = Texture.TextureFilter.Linear;
 //		fontParams.magFilter = Texture.TextureFilter.Linear;
-		fontParams.shadowColor = new Color(29f/255f, 46f/255f, 66f/255f, 1f);
-		fontParams.shadowOffsetX = 1;
-		fontParams.shadowOffsetY = 1;
+		fontParams.shadowColor = new Color(140f/255f, 41f/255f, 32f/255f, 1f);
+		fontParams.shadowOffsetX = (int) (2*ratio);
+		fontParams.shadowOffsetY = (int) (2*ratio);
 
 		Label.LabelStyle labelStyle = new Label.LabelStyle();
 		fontParams.size = (int) (0.15f * stage.getHeight());
 		labelStyle.font = GameBase.titleGen.generateFont(fontParams);
-		labelStyle.fontColor = Color.BLACK;
+		labelStyle.fontColor = new Color(163f/255f, 48f/255f, 38f/255f, 1f);
 		skin.add("title", labelStyle);
 
 		labelStyle = new Label.LabelStyle();
-		fontParams.size = (int) (0.15f * stage.getHeight());
-		labelStyle.font = GameBase.titleGen.generateFont(fontParams);
-		labelStyle.fontColor = Color.BLACK;
+		fontParams.size = (int) (0.05f * stage.getHeight());
+		fontParams.shadowOffsetX = (int) (1*ratio);
+		fontParams.shadowOffsetY = (int) (1*ratio);
+		labelStyle.font = GameBase.title2Gen.generateFont(fontParams);
+		labelStyle.fontColor = new Color(163f/255f, 48f/255f, 38f/255f, 1f);
 		skin.add("credits", labelStyle);
 
 		labelStyle = new Label.LabelStyle();
 		fontParams.size = (int) (0.095f * stage.getHeight());
-		labelStyle.font = GameBase.titleGen.generateFont(fontParams);
+		fontParams.shadowColor = new Color(29f/255f, 46f/255f, 66f/255f, 1f);
+		labelStyle.font = GameBase.title2Gen.generateFont(fontParams);
 		labelStyle.fontColor = new Color(63f/255f, 90f/255f, 135f/255f, 1f);
 		skin.add("default", labelStyle);
 
@@ -98,10 +101,8 @@ public class MainMenuScreen extends AbstractScreen {
 
 		credits = new Label("Radnap #LD34", skin, "credits");
 		stage.addActor(credits);
-		float newHeight = 0.67f * stage.getHeight();
-		credits.setSize(newHeight * credits.getWidth() / credits.getHeight(), newHeight);
-		credits.setX(0.85f * stage.getWidth() - credits.getWidth());
-		credits.setY((0.8f * stage.getHeight() - credits.getHeight()) / 2f);
+		credits.setX((stage.getWidth() - credits.getWidth()) / 2f);
+		credits.setY((0.1f * stage.getHeight() - credits.getHeight()) / 2f);
 
 
 		////////// MENU //////////
@@ -111,7 +112,7 @@ public class MainMenuScreen extends AbstractScreen {
 		// Setting the default value of the cells
 		table.defaults().left().spaceTop(Value.percentHeight(0.3f));
 		table.setX(0.15f * stage.getWidth());
-		table.setY(0.2f * stage.getHeight());
+		table.setY(0.3f * stage.getHeight());
 
 		Label newGame = new Label("Nouvelle partie", skin);
 		newGame.addListener(new InputListener() {

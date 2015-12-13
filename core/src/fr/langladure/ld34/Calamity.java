@@ -20,9 +20,7 @@ public class Calamity extends InputAdapter {
 	private String name;
 
 	private AnimatedElement leftArrow;
-	private boolean playedLeftOnce;
 	private AnimatedElement rightArrow;
-	private boolean playedRightOnce;
 
 	private AnimatedElement back;
 
@@ -61,11 +59,9 @@ public class Calamity extends InputAdapter {
 
 
 		leftArrow = new AnimatedElement(ratio, 0.03f, (TextureRegion[]) atlas.findRegions("leftArrow").toArray(TextureRegion.class), false);
-		leftArrow.setPosition(0.25f * screenWidth - leftArrow.getWidth() / 2f, 0.07f * screenHeight);
-		playedLeftOnce = true;
+		leftArrow.setPosition(0.25f * screenWidth - leftArrow.getWidth() / 2f, 0.1f * screenHeight);
 		rightArrow = new AnimatedElement(ratio, 0.03f, (TextureRegion[]) atlas.findRegions("rightArrow").toArray(TextureRegion.class), false);
-		rightArrow.setPosition(0.75f * screenWidth - rightArrow.getWidth() / 2f, 0.07f * screenHeight);
-		playedLeftOnce = true;
+		rightArrow.setPosition(0.75f * screenWidth - rightArrow.getWidth() / 2f, 0.1f * screenHeight);
 
 		back = new AnimatedElement(ratio, backDuration, (TextureRegion[]) atlas.findRegions(name + "_back").toArray(TextureRegion.class), true);
 	}
@@ -90,7 +86,6 @@ public class Calamity extends InputAdapter {
 				taped = 0;
 				leftArrow.setScale(1f);
 			} else {
-				playedLeftOnce = false;
 				leftArrow.restart();
 				leftArrow.setScale(leftArrow.getScale() + 0.1f);
 				taped++;
@@ -105,7 +100,6 @@ public class Calamity extends InputAdapter {
 				rightArrow.setScale(1f);
 				taped = 0;
 			} else {
-				playedRightOnce = false;
 				rightArrow.restart();
 				rightArrow.setScale(rightArrow.getScale() + 0.1f);
 				taped++;
@@ -119,28 +113,8 @@ public class Calamity extends InputAdapter {
 	public void act(float delta) {
 		back.act(delta);
 
-		if (currentCombination == -1)
-			return;
-
-		if (combinations.get(currentCombination).arrow == LEFT) {
-			if (!playedLeftOnce) {
-				leftArrow.act(delta);
-				if (leftArrow.isAnimationFinished()) {
-					leftArrow.restart();
-					playedLeftOnce = true;
-				}
-			}
-			rightArrow.act(delta);
-		} else {
-			if (!playedRightOnce) {
-				rightArrow.act(delta);
-				if (rightArrow.isAnimationFinished()) {
-					rightArrow.restart();
-					playedRightOnce = true;
-				}
-			}
-			leftArrow.act(delta);
-		}
+		rightArrow.act(delta);
+		leftArrow.act(delta);
 	}
 
 	public void draw(Batch batch) {
@@ -149,9 +123,9 @@ public class Calamity extends InputAdapter {
 		if (currentCombination == -1)
 			return;
 
-//		if (combinations.get(currentCombination).arrow == LEFT)
+		if (combinations.get(currentCombination).arrow == LEFT)
 			leftArrow.draw(batch);
-//		else
+		else
 			rightArrow.draw(batch);
 	}
 }

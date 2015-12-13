@@ -20,7 +20,6 @@ public class LoadingScreen extends AbstractScreen {
 
 	private Stage stage;
 
-	private Image logo;
 	private Image loadingBar;
 	private Label pass;
 
@@ -57,19 +56,12 @@ public class LoadingScreen extends AbstractScreen {
 		stage.addActor(screenBg);
 
 
-		// Grab the regions from the atlas and create some images
-		logo = new Image(atlas.findRegion("logo"));
-		stage.addActor(logo);
-		logo.setSize(logo.getWidth() * ratio, logo.getHeight() * ratio);
-		logo.setX((stage.getWidth() - logo.getWidth()) / 2f);
-		logo.setY((stage.getHeight() - logo.getHeight()) * 3f / 4f);
-
 		// Place the loading bar
 		loadingBar = new Image(atlas.findRegion("loadingBar"));
 		stage.addActor(loadingBar);
 		loadingBar.setSize(SCREEN_WIDTH, SCREEN_WIDTH * loadingBar.getHeight() / loadingBar.getWidth());
 		loadingBar.setX(-loadingBar.getWidth());
-		loadingBar.setY(logo.getY() - 2.5f * loadingBar.getHeight());
+		loadingBar.setY(stage.getHeight() / 4f - 2.5f * loadingBar.getHeight());
 
 		FreeTypeFontGenerator.FreeTypeFontParameter fontParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		fontParams.minFilter = Texture.TextureFilter.Linear;
