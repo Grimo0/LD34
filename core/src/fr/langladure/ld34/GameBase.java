@@ -20,7 +20,7 @@ import fr.langladure.ld34.screens.*;
 public class GameBase extends Game {
 
 	public static final String NAME = "GameBase";
-	public static final String VERSION = "0.1.0";
+	public static final String VERSION = "0.2.0";
 	public static boolean RELEASE = false;
 	public static boolean DEVMODE = false;
 
@@ -48,7 +48,7 @@ public class GameBase extends Game {
 			FileHandle[] assetsFolder = Gdx.files.internal("../../_assets").list();
 			for (FileHandle folder : assetsFolder) {
 				if (folder.isDirectory() && !folder.name().startsWith("_")) {
-					TexturePacker.process("../../_assets/" + folder.name(), folder.name(), folder.name() + "Pack");
+//					TexturePacker.process("../../_assets/" + folder.name(), folder.name(), folder.name() + "Pack");
 				}
 			}
 		}

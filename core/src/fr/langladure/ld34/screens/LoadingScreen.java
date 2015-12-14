@@ -61,7 +61,7 @@ public class LoadingScreen extends AbstractScreen {
 		stage.addActor(loadingBar);
 		loadingBar.setSize(SCREEN_WIDTH, SCREEN_WIDTH * loadingBar.getHeight() / loadingBar.getWidth());
 		loadingBar.setX(-loadingBar.getWidth());
-		loadingBar.setY(stage.getHeight() / 4f - 2.5f * loadingBar.getHeight());
+		loadingBar.setY(stage.getHeight() / 4f - 1.5f * loadingBar.getHeight());
 
 		FreeTypeFontGenerator.FreeTypeFontParameter fontParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		fontParams.minFilter = Texture.TextureFilter.Linear;

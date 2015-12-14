@@ -10,20 +10,24 @@ import com.badlogic.gdx.utils.Array;
  */
 public class Plant {
 
+	private float x;
+	private float y;
 	private Array<AnimatedElement> steps;
 	private int currentStep;
 	private AnimatedElement step;
 
 
 	public Plant(TextureAtlas atlas, float ratio, float x, float y) {
+		this.x = x;
+		this.y = y;
 		steps = new Array<>();
 
-		AnimatedElement step = new AnimatedElement(ratio, 0.0f, (TextureRegion[]) atlas.findRegions("plantStep1").toArray(TextureRegion.class), false);
+		AnimatedElement step = new AnimatedElement(ratio, 0.3f, (TextureRegion[]) atlas.findRegions("plantStep0").toArray(TextureRegion.class), false);
 		step.setX(x - step.getWidth() / 2f);
 		step.setY(y);
 		steps.add(step);
 
-		step = new AnimatedElement(ratio, 0.4f, (TextureRegion[]) atlas.findRegions("plantStep2").toArray(TextureRegion.class), false);
+		step = new AnimatedElement(ratio, 0.4f, (TextureRegion[]) atlas.findRegions("plantStep1").toArray(TextureRegion.class), false);
 		step.setX(x - step.getWidth() / 2f);
 		step.setY(y);
 		steps.add(step);
@@ -38,6 +42,14 @@ public class Plant {
 		this.step = steps.get(0);
 	}
 
+
+	public float getY() {
+		return y;
+	}
+
+	public float getX() {
+		return x;
+	}
 
 	public int getCurrentStep() {
 		return currentStep;

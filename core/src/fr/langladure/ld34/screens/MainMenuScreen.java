@@ -172,20 +172,24 @@ public class MainMenuScreen extends AbstractScreen {
 		stage.addListener(new InputListener() {
 			@Override
 			public boolean keyDown(InputEvent event, int keycode) {
-				if (keycode == Input.Keys.DOWN && selected < table.getChildren().size - 1) {
+				if (keycode == Input.Keys.DOWN) {
 					table.getChildren().items[selected].setColor(1f, 1f, 1f, 1f);
 
 					selected++;
+					if ( selected > table.getChildren().size - 1)
+						selected = 0;
 					Actor item = table.getChildren().items[selected];
 					item.setColor(1f, 1f, 1f, 0.8f);
 					cursor.setY(table.getY() + item.getY() + (item.getHeight() - cursor.getHeight()) / 2);
 					stage.setKeyboardFocus(item);
 
 					return true;
-				} else if (keycode == Input.Keys.UP && selected > 0) {
+				} else if (keycode == Input.Keys.UP) {
 					table.getChildren().items[selected].setColor(1f, 1f, 1f, 1f);
 
 					selected--;
+					if (selected < 0)
+						selected = table.getChildren().size - 1;
 					Actor item = table.getChildren().items[selected];
 					item.setColor(1f, 1f, 1f, 0.8f);
 					cursor.setY(table.getY() + item.getY() + (item.getHeight() - cursor.getHeight()) / 2);

@@ -8,10 +8,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 public class AnimatedElement extends GraphicItem {
 
+	private String name;
+
 	private boolean loop;
 	private Animation animation;
 	private float stateTime;
 
+
+	public AnimatedElement(String name, float ratio, float duration, TextureRegion[] frames, boolean loop) {
+		this(ratio, duration, frames, loop);
+		this.name = name;
+	}
 
 	public AnimatedElement(float ratio, float duration, TextureRegion[] frames, boolean loop) {
 		super(ratio);
@@ -21,6 +28,10 @@ public class AnimatedElement extends GraphicItem {
 		setTextureRegion(frames[0]);
 	}
 
+
+	public String getName() {
+		return name;
+	}
 
 	public void restart() {
 		stateTime = 0;
