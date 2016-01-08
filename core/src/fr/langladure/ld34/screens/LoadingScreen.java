@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import fr.langladure.ld34.GameBase;
+import fr.langladure.ld34.TheBulb;
 
 /**
  * @author Radnap
@@ -19,6 +19,8 @@ import fr.langladure.ld34.GameBase;
 public class LoadingScreen extends AbstractScreen {
 
 	private Stage stage;
+
+	private float ratio;
 
 	private Image loadingBar;
 	private Label pass;
@@ -32,7 +34,7 @@ public class LoadingScreen extends AbstractScreen {
 	/**
 	 * Will load all the assets it needs during instantiation.
 	 */
-	public LoadingScreen(GameBase game) {
+	public LoadingScreen(TheBulb game) {
 		super(game);
 		fadeWhenLoaded = true;
 
@@ -50,7 +52,7 @@ public class LoadingScreen extends AbstractScreen {
 		/// Create the screen background and adapt the world to it
 		Image screenBg = new Image(atlas.findRegion("loadingBg"));
 
-		float ratio = SCREEN_WIDTH / screenBg.getWidth();
+		ratio = SCREEN_WIDTH / screenBg.getWidth();
 		screenBg.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		stage.addActor(screenBg);
@@ -59,20 +61,20 @@ public class LoadingScreen extends AbstractScreen {
 		// Place the loading bar
 		loadingBar = new Image(atlas.findRegion("loadingBar"));
 		stage.addActor(loadingBar);
-		loadingBar.setSize(SCREEN_WIDTH, SCREEN_WIDTH * loadingBar.getHeight() / loadingBar.getWidth());
-		loadingBar.setX(-loadingBar.getWidth());
-		loadingBar.setY(stage.getHeight() / 4f - 1.5f * loadingBar.getHeight());
+		loadingBar.setWidth(SCREEN_WIDTH - 12 * ratio);
+		loadingBar.setX(6*ratio);
+		loadingBar.setY(stage.getHeight() / 4f - .5f * loadingBar.getHeight());
 
 		FreeTypeFontGenerator.FreeTypeFontParameter fontParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		fontParams.minFilter = Texture.TextureFilter.Linear;
 		fontParams.magFilter = Texture.TextureFilter.Linear;
-		fontParams.size = (int) (0.5f * loadingBar.getHeight());
+		fontParams.size = (int) (loadingBar.getHeight());
 		fontParams.shadowColor = Color.BLACK;
 		fontParams.shadowOffsetX = 2;
 		fontParams.shadowOffsetY = 2;
-		BitmapFont font = GameBase.title2Gen.generateFont(fontParams);
+		BitmapFont font = TheBulb.title2Gen.generateFont(fontParams);
 
-		pass = new Label("Cliquez pour continuer", new Label.LabelStyle(font, new Color(0.9f, 0.9f, 0.85f, 1f)));
+		pass = new Label("Press the good arrow to repel the elements !", new Label.LabelStyle(font, new Color(0.9f, 0.9f, 0.85f, 1f)));
 		stage.addActor(pass);
 		pass.setX((stage.getWidth() - pass.getWidth()) / 2f);
 		pass.setY(loadingBar.getY() + 1f * loadingBar.getHeight());
@@ -90,8 +92,7 @@ public class LoadingScreen extends AbstractScreen {
 	public void resize(int width, int height) {
 		super.resize(width, height);
 
-		loadingBar.setSize(SCREEN_WIDTH, SCREEN_WIDTH * loadingBar.getHeight() / loadingBar.getWidth());
-		loadingBar.setPosition(-loadingBar.getWidth() + (viewport.getWorldWidth() - SCREEN_WIDTH) / 2f, loadingBar.getY());
+		loadingBar.setWidth(SCREEN_WIDTH - 12 * ratio);
 	}
 
 	@Override
@@ -109,7 +110,7 @@ public class LoadingScreen extends AbstractScreen {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-		stage.setDebugAll(GameBase.DEVMODE);
+		stage.setDebugAll(TheBulb.DEVMODE);
 
 		if (game.assetManager.update()) { // Load some, will return true if done loading;
 			if (!fadeWhenLoaded && percent > 0.95f)
@@ -120,7 +121,7 @@ public class LoadingScreen extends AbstractScreen {
 					|| Gdx.input.justTouched()) {
 				System.gc();
 				nextScreen.create();
-				loadingBar.setX(-loadingBar.getWidth());
+				loadingBar.setScaleX(0f);
 				game.setScreen(nextScreen);
 			}
 		}
@@ -129,7 +130,7 @@ public class LoadingScreen extends AbstractScreen {
 		percent = Interpolation.linear.apply(percent, game.assetManager.getProgress(), 0.1f);
 
 		// Update positions (and size) to match the percentage
-		loadingBar.setPosition((percent - 1f) * loadingBar.getWidth() + (viewport.getWorldWidth() - SCREEN_WIDTH) / 2f, loadingBar.getY());
+		loadingBar.setScaleX(percent);
 
 		// Show the loading screen
 		stage.act(delta);

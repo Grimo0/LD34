@@ -2,20 +2,14 @@
 //  animation_before:{name:"plantStep0",duration: 0.1,x:250,y:250},
 //  animation_after:{name:"plantStep0",duration: 0.1,x:250,y:250},
   front_elements: [
-	{name:"fire",duration: 0.06,x:34,y:65, loop:true},
-	{name:"fire",duration: 0.06,x:5,y:30, loop:true},
-	{name:"fire",duration: 0.06,x:10,y:20, loop:true},
-//	{name:"fire",duration: 0.06,x:130,y:75, loop:true},
-	{name:"fire",duration: 0.06,x:430,y:75, loop:true},
-	{name:"fire",duration: 0.06,x:400,y:45, loop:true},
-	{name:"fire",duration: 0.06,x:450,y:20, loop:true},
+//	{name:"fire",duration: 0.06,x:34,y:65, loop:true, die:"fire_die"},
+//	{name:"fire",duration: 0.06,x:5,y:30, loop:true, die:"fire_die"},
+//	{name:"fire",duration: 0.06,x:10,y:20, loop:true, die:"fire_die"},
+//	{name:"fire",duration: 0.06,x:130,y:75, loop:true, die:"fire_die"},
+//	{name:"fire",duration: 0.06,x:430,y:75, loop:true, die:"fire_die"},
+//	{name:"fire",duration: 0.06,x:400,y:45, loop:true, die:"fire_die"},
+//	{name:"fire",duration: 0.06,x:450,y:20, loop:true, die:"fire_die"},
 	{name:"clouds",duration: 1,x:0,y:0, loop:true}
-//	{name:"sunset",duration: 0.0,x:0,y:0, loop:true}
-  ],
-  combinations: [
-	{a:0, n:2},
-	{a:1, n:2},
-	{a:0, n:2},
-	{a:1, n:2}
+	{name:"sun",duration: 0.0,x:0,y:0, loop:true}
   ]
 }

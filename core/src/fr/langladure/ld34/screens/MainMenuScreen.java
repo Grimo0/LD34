@@ -8,9 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
-import fr.langladure.ld34.GameBase;
+import fr.langladure.ld34.TheBulb;
 
 /**
  * @author Radnap
@@ -25,7 +23,7 @@ public class MainMenuScreen extends AbstractScreen {
 	private int selected;
 
 
-	public MainMenuScreen(GameBase game) {
+	public MainMenuScreen(TheBulb game) {
 		super(game);
 	}
 
@@ -73,7 +71,7 @@ public class MainMenuScreen extends AbstractScreen {
 
 		Label.LabelStyle labelStyle = new Label.LabelStyle();
 		fontParams.size = (int) (0.15f * stage.getHeight());
-		labelStyle.font = GameBase.titleGen.generateFont(fontParams);
+		labelStyle.font = TheBulb.titleGen.generateFont(fontParams);
 		labelStyle.fontColor = new Color(163f/255f, 48f/255f, 38f/255f, 1f);
 		skin.add("title", labelStyle);
 
@@ -81,19 +79,19 @@ public class MainMenuScreen extends AbstractScreen {
 		fontParams.size = (int) (0.05f * stage.getHeight());
 		fontParams.shadowOffsetX = (int) (1*ratio);
 		fontParams.shadowOffsetY = (int) (1*ratio);
-		labelStyle.font = GameBase.title2Gen.generateFont(fontParams);
+		labelStyle.font = TheBulb.title2Gen.generateFont(fontParams);
 		labelStyle.fontColor = new Color(163f/255f, 48f/255f, 38f/255f, 1f);
 		skin.add("credits", labelStyle);
 
 		labelStyle = new Label.LabelStyle();
 		fontParams.size = (int) (0.095f * stage.getHeight());
 		fontParams.shadowColor = new Color(29f/255f, 46f/255f, 66f/255f, 1f);
-		labelStyle.font = GameBase.title2Gen.generateFont(fontParams);
+		labelStyle.font = TheBulb.title2Gen.generateFont(fontParams);
 		labelStyle.fontColor = new Color(63f/255f, 90f/255f, 135f/255f, 1f);
 		skin.add("default", labelStyle);
 
 
-		title = new Label(GameBase.NAME, skin, "title");
+		title = new Label(TheBulb.NAME, skin, "title");
 		stage.addActor(title);
 		title.setX((stage.getWidth() - title.getWidth()) / 2f);
 		title.setY(0.87f * stage.getHeight() - 0.5f * title.getHeight());
@@ -219,7 +217,7 @@ public class MainMenuScreen extends AbstractScreen {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-		stage.setDebugAll(GameBase.DEVMODE);
+		stage.setDebugAll(TheBulb.DEVMODE);
 
 		stage.act(delta);
 		stage.draw();

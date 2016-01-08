@@ -32,7 +32,7 @@ public class Logger extends com.badlogic.gdx.utils.Logger {
 
 
 	public static void log(String message) {
-		Gdx.app.log(GameBase.class.getSimpleName(), message);
+		Gdx.app.log(TheBulb.class.getSimpleName(), message);
 	}
 
 

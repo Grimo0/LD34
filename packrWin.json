@@ -1,7 +1,7 @@
 {
     "platform": "windows32",
     "jdk": "openjdk-1.7.0-u80-unofficial-windows-i586-image.zip",
-    "executable": "myapp",
+    "executable": "TheBulb",
     "classpath": [
         "LD34/desktop/build/libs/desktop-1.0.jar"
     ],
@@ -12,6 +12,6 @@
     "resources": [
         "LD34/android/assets/"
     ],
-    "minimizejre": "soft",
+    "minimizejre": "hard",
     "outdir": "LD34/build/win32"
 }

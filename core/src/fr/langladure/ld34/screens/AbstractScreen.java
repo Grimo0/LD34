@@ -4,9 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import fr.langladure.ld34.GameBase;
+import fr.langladure.ld34.TheBulb;
 
 /**
  * Handle the camera creation and contain the stage variable. Handle the resize of the window and
@@ -22,13 +21,13 @@ public abstract class AbstractScreen implements Screen {
 	/** In world unit */
 	protected float SCREEN_HEIGHT;
 
-	final public GameBase game;
+	final public TheBulb game;
 
 	public OrthographicCamera camera;
 	public FitViewport viewport;
 
 
-	public AbstractScreen(final GameBase game) {
+	public AbstractScreen(final TheBulb game) {
 		this.game = game;
 
 		SCREEN_WIDTH = 256f;
@@ -78,9 +77,9 @@ public abstract class AbstractScreen implements Screen {
 
 	@Override
 	public void show() {
-		if (!GameBase.RELEASE) {
-			GameBase.stringBuilder.setLength(0);
-			GameBase.debug(GameBase.stringBuilder.append("### Showing ")
+		if (!TheBulb.RELEASE) {
+			TheBulb.stringBuilder.setLength(0);
+			TheBulb.debug(TheBulb.stringBuilder.append("### Showing ")
 					.append(((Object) this).getClass().getSimpleName())
 					.append(" ###").toString());
 		}

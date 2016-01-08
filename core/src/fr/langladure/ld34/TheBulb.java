@@ -17,10 +17,10 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import fr.langladure.ld34.screens.*;
 
-public class GameBase extends Game {
+public class TheBulb extends Game {
 
-	public static final String NAME = "GameBase";
-	public static final String VERSION = "0.2.0";
+	public static final String NAME = "The Bulb";
+	public static final String VERSION = "0.3.0";
 	public static boolean RELEASE = false;
 	public static boolean DEVMODE = false;
 
@@ -83,7 +83,7 @@ public class GameBase extends Game {
 		loadingScreen = new LoadingScreen(this);
 		gameScreen = new GameScreen(this);
 
-		loadingScreen.setNextScreen(gameScreen);
+		loadingScreen.setNextScreen(mainMenuScreen);
 		setScreen(loadingScreen);
 	}
 

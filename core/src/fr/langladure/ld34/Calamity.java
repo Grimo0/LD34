@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import fr.langladure.ld34.screens.GameScreen;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -34,11 +36,13 @@ public class Calamity extends InputAdapter {
 	private AnimatedElement animationAfter;
 	private Array<AnimatedElement> backElements;
 	private Array<AnimatedElement> frontElements;
+	private Map<AnimatedElement, AnimatedElement> dieElements;
 
 	private Array<Combination> combinations;
 	private Random random;
 	private boolean pressedFine;
 	private boolean pressedWrong;
+	private int lastPressed;
 	private int currentCombination;
 	private int taped;
 
@@ -59,7 +63,7 @@ public class Calamity extends InputAdapter {
 		this.plant = plant;
 		this.ratio = ratio;
 
-		JsonValue jsonValue = new JsonReader().parse(GameBase.resolver.resolve("game/" + name + ".json"));
+		JsonValue jsonValue = new JsonReader().parse(TheBulb.resolver.resolve("game/" + name + ".json"));
 
 		JsonValue element = jsonValue.get("animation_before");
 		if (element != null) {
@@ -87,8 +91,7 @@ public class Calamity extends InputAdapter {
 			element = element.next();
 		}
 
-		int leftElements = 0;
-		int rightElements = 0;
+		AnimatedElement dieElement;
 		frontElements = new Array<>();
 		element = jsonValue.get("front_elements");
 		element = element == null ? null : element.child();
@@ -97,29 +100,52 @@ public class Calamity extends InputAdapter {
 					(TextureRegion[]) atlas.findRegions(element.getString("name")).toArray(TextureRegion.class), element.getBoolean("loop", false));
 			animatedElement.setPosition(element.getInt("x") * ratio, element.getInt("y") * ratio);
 			frontElements.add(animatedElement);
-			if (plant.getX() > animatedElement.getX() + animatedElement.getWidth() / 2f)
-				rightElements++;
-			else
-				leftElements++;
 			element = element.next();
 		}
 
+
 		random = new Random();
+		dieElements = new HashMap<>();
+		int leftElements = 0;
+		int rightElements = 0;
+		float lastY = 120;
+		for (int i = 0; i < 30; i++) {
+			animatedElement = new AnimatedElement(name, ratio, 0.06f, (TextureRegion[]) atlas.findRegions(name).toArray(TextureRegion.class), true);
+			frontElements.add(animatedElement);
+			dieElement = new AnimatedElement(name+"_die", ratio, 0.06f, (TextureRegion[]) atlas.findRegions(name+"_die").toArray(TextureRegion.class), false);
+			dieElements.put(animatedElement, dieElement);
+			if (random.nextBoolean()) {
+				animatedElement.setPosition((float) (plant.getX() + 200 + Math.random() * 150 * ratio), Math.max(lastY - (int)(Math.random() * 2) * 6f * ratio, 20f));
+				rightElements++;
+			} else {
+				animatedElement.setPosition((float) (plant.getX() - 200 - Math.random() * 150 * ratio), Math.max(lastY - (int)(Math.random() * 2) * 6f * ratio, 20f));
+				leftElements++;
+			}
+			lastY = animatedElement.getY();
+		}
+
 		combinations = new Array<>();
-		/*jsonValue = jsonValue.get("combinations").child();
+		jsonValue = jsonValue.get("combinations");
+		jsonValue = jsonValue == null ? null : jsonValue.child();
 		while (jsonValue != null) {
 			combinations.add(new Combination(jsonValue.getInt("a"), jsonValue.getInt("n")));
 			jsonValue = jsonValue.next();
-		}*/
-		for (int i = 0; i < 30; i++) {
-			if (random.nextBoolean())
-				combinations.add(new Combination(1, 1));
-			else
-				combinations.add(new Combination(0, 1));
+		}
+		if (combinations.size == 0) {
+			while (leftElements > 0 || rightElements > 0) {
+				if ((random.nextBoolean() || leftElements == 0) && rightElements > 0) {
+					combinations.add(new Combination(RIGHT, 1));
+					rightElements--;
+				} else if (leftElements > 0) {
+					combinations.add(new Combination(LEFT, 1));
+					leftElements--;
+				}
+			}
 		}
 
 		pressedFine = false;
 		pressedWrong = false;
+		lastPressed = -1;
 		currentCombination = 0;
 		taped = 0;
 
@@ -132,6 +158,11 @@ public class Calamity extends InputAdapter {
 
 
 	public boolean isFinished() {
+		for (Map.Entry<AnimatedElement, AnimatedElement> dieElement : dieElements.entrySet()) {
+			if (!dieElement.getValue().isAnimationFinished())
+				return false;
+		}
+
 		return currentCombination == -1 && (animationAfter == null || animationAfter.isAnimationFinished());
 	}
 
@@ -163,6 +194,7 @@ public class Calamity extends InputAdapter {
 				leftArrow.setScale(leftArrow.getScale() + 0.1f);
 				taped++;
 			}
+			lastPressed = LEFT;
 			pressedFine = true;
 			return true;
 		} else if (keycode == Input.Keys.RIGHT) {
@@ -183,6 +215,7 @@ public class Calamity extends InputAdapter {
 				rightArrow.setScale(rightArrow.getScale() + 0.1f);
 				taped++;
 			}
+			lastPressed = RIGHT;
 			pressedFine = true;
 			return true;
 		}
@@ -195,27 +228,37 @@ public class Calamity extends InputAdapter {
 			backElement.act(delta);
 		}
 
-		for (AnimatedElement frontElement : frontElements) {
-			if (started && currentCombination != -1 && "fire".equals(frontElement.getName())) {
-				if (pressedFine) {
-					frontElement.setX(frontElement.getX() - 200 * Math.signum(plant.getX() - frontElement.getX() - frontElement.getWidth() / 2f) * delta * ratio);
-//					frontElement.setY(frontElement.getY() - 5 * Math.signum(plant.getY() - frontElement.getY()) * delta * ratio);
-				} else if (pressedWrong) {
-					frontElement.setX(frontElement.getX() + 170 * Math.signum(plant.getX() - frontElement.getX() - frontElement.getWidth() / 2f) * delta * ratio);
-					frontElement.setY(frontElement.getY() + 50 * Math.signum(plant.getY() - frontElement.getY()) * delta * ratio);
-				} else {
+		int closerI = -1;
+		float closerDistance = Float.MAX_VALUE;
+		for (int i = 0; i < frontElements.size; i++) {
+			AnimatedElement frontElement = frontElements.get(i);
+			if (started && frontElement.getName() != null && name.equals(frontElement.getName())) {
+				float distance = plant.getX() - frontElement.getX() - frontElement.getWidth() / 2f;
+				if (pressedFine && ((distance > 0 && lastPressed == LEFT) || (distance < 0 && lastPressed == RIGHT)) && Math.abs(distance) < closerDistance) {
+					closerDistance = Math.abs(distance);
+					closerI = i;
+				} else if (pressedWrong && currentCombination != -1) {
+					frontElement.setX(frontElement.getX() + 600 * Math.signum(distance) * delta * ratio);
+					frontElement.setY(frontElement.getY() + 150 * Math.signum(plant.getY() - frontElement.getY()) * delta * ratio);
+				} else if (currentCombination != -1) {
 					if (random.nextBoolean())
-						frontElement.setX(frontElement.getX() + 12 * Math.signum(plant.getX() - frontElement.getX() - frontElement.getWidth() / 2f) * delta * ratio);
+						frontElement.setX(frontElement.getX() + 25 * Math.signum(distance) * delta * ratio);
 					else
-						frontElement.setY(frontElement.getY() + 3 * Math.signum(plant.getY() - frontElement.getY()) * delta * ratio);
+						frontElement.setY(frontElement.getY() + 5 * Math.signum(plant.getY() - frontElement.getY()) * delta * ratio);
 				}
 
-				if (Math.abs(plant.getX() - frontElement.getX() - frontElement.getWidth()) / 2f < 19 * ratio) {
+				if (Math.abs(distance) < 19 * ratio) {
 					currentCombination = -1;
 					GameScreen.gameOver = true;
 				}
 			}
 			frontElement.act(delta);
+		}
+		if (closerI != -1) {
+			AnimatedElement element = frontElements.get(closerI);
+			AnimatedElement dieElement = dieElements.get(element);
+			dieElement.setPosition(element.getX(), element.getY());
+			frontElements.set(closerI, dieElement);
 		}
 
 		if (animationBefore != null)

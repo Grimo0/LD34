@@ -12,8 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import fr.langladure.ld34.GameBase;
+import fr.langladure.ld34.TheBulb;
 
 /**
  * @author Radnap
@@ -28,7 +27,7 @@ public class OptionScreen extends AbstractScreen {
 	private int selected;
 
 
-	public OptionScreen(GameBase game) {
+	public OptionScreen(TheBulb game) {
 		super(game);
 	}
 
@@ -70,7 +69,7 @@ public class OptionScreen extends AbstractScreen {
 		fontParams.shadowColor = new Color(0f, 0f, 0f, 0.3f);
 		fontParams.shadowOffsetX = 1;
 		fontParams.shadowOffsetY = 1;
-		BitmapFont font = GameBase.titleGen.generateFont(fontParams);
+		BitmapFont font = TheBulb.titleGen.generateFont(fontParams);
 
 		Label.LabelStyle labelStyle = new Label.LabelStyle();
 		labelStyle.font = font;
@@ -247,7 +246,7 @@ public class OptionScreen extends AbstractScreen {
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-		stage.setDebugAll(GameBase.DEVMODE);
+		stage.setDebugAll(TheBulb.DEVMODE);
 
 		stage.act(delta);
 		stage.draw();

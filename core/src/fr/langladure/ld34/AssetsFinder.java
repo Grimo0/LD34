@@ -65,10 +65,10 @@ public class AssetsFinder {
 	public boolean load(String folderName) {
 		FileHandle folder = resolver.resolve(folderName);
 		if (!folder.exists() || !folder.isDirectory()) {
-			GameBase.debug("Folder " + folder.path() + " doesn't exist, can't load");
+			TheBulb.debug("Folder " + folder.path() + " doesn't exist, can't load");
 			return false;
 		}
-		GameBase.debug("Load folder " + folder.path());
+		TheBulb.debug("Load folder " + folder.path());
 
 		for (AssetDescriptor descriptor : assets) {
 			if (descriptor.folder != null) {
@@ -96,10 +96,10 @@ public class AssetsFinder {
 	public void unload(String folderName) {
 		FileHandle folder = resolver.resolve(folderName);
 		if (!folder.exists()) {
-			GameBase.debug("Folder " + folder.path() + " doesn't exist, can't unload");
+			TheBulb.debug("Folder " + folder.path() + " doesn't exist, can't unload");
 			return;
 		}
-		GameBase.debug("Unload folder " + folder.path());
+		TheBulb.debug("Unload folder " + folder.path());
 
 		for (AssetDescriptor descriptor : assets) {
 			if (descriptor.folder != null) {
